@@ -4,9 +4,19 @@ const db = new PrismaClient();
 async function seed() {
   console.log("Seeding database...");
 
+  const ben = await db.user.create({
+    data: {
+      username: "ben",
+      // this is a hashed version of "twixrox"
+      passwordHash:
+        "$2b$10$K7L1OJ45/4Y2nIvhRVpCe.FSmhDdWoXehVzJptJ/op0lSsvqNu/1u",
+    },
+  });
+
   await Promise.all(
     getJokes().map((joke) => {
-      return db.joke.create({ data: joke });
+      const data = { jokesterId: ben.id, ...joke };
+      return db.joke.create({ data });
     }),
   );
 
