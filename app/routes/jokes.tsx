@@ -80,6 +80,8 @@ export default function JokesRoute() {
             <Link to="new" className="button">
               Add your own
             </Link>
+
+            <Link to="/jokes.rss">Jokes RSS feed</Link>
           </div>
 
           <div className="jokes-outlet">
