@@ -32,3 +32,7 @@ export default function JokesIndex() {
     </>
   );
 }
+
+export function ErrorBoundary() {
+  return <div className="error-container">Oh dear, something went wrong.</div>;
+}
