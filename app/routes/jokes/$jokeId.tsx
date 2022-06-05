@@ -1,10 +1,32 @@
 import type { joke } from "@prisma/client";
-import type { ActionFunction, LoaderFunction } from "@remix-run/node";
+import type {
+  ActionFunction,
+  LoaderFunction,
+  MetaFunction,
+} from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Link, useLoaderData, useParams, useCatch } from "@remix-run/react";
 
 import { db } from "~/utils/db.server";
 import { getUserId, requireUserId } from "~/utils/session.server";
+
+export const meta: MetaFunction = ({
+  data,
+}: {
+  data: LoaderData | undefined;
+}) => {
+  if (!data) {
+    return {
+      title: "No Joke",
+      description: "No joke found",
+    };
+  }
+
+  return {
+    title: `"${data.joke.name}" joke`,
+    description: `Enjoy "${data.joke.name}" joke`,
+  };
+};
 
 type LoaderData = { joke: joke; isOwner: boolean };
 

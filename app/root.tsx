@@ -1,9 +1,9 @@
-import { Links, LiveReload, Outlet, useCatch } from "@remix-run/react";
+import { Links, LiveReload, Outlet, useCatch, Meta } from "@remix-run/react";
+import { LinksFunction, MetaFunction } from "@remix-run/node";
 
 import globalCSS from "~/styles/global.css";
 import globalMediumCSS from "~/styles/global-medium.css";
 import globalLargeCSS from "~/styles/global-large.css";
-import { LinksFunction } from "@remix-run/node";
 
 export const links: LinksFunction = () => {
   return [
@@ -24,6 +24,22 @@ export const links: LinksFunction = () => {
   ];
 };
 
+export const meta: MetaFunction = () => {
+  const description = "A jokes app built with Remix.";
+
+  return {
+    charSet: "utf-8",
+    description,
+    keywords: "Remix, jokes, funny",
+    "twitter:image": "https://remix-jokes.lol/social.png",
+    "twitter:card": "summary_large_image",
+    "twitter:creator": "@benbagley_",
+    "twitter:site": "@benbagley_",
+    "twitter:title": "Remix Jokes",
+    "teitter:description": description,
+  };
+};
+
 function Document({
   children,
   title = "Remix Jokes",
@@ -34,7 +50,7 @@ function Document({
   return (
     <html lang="en">
       <head>
-        <meta charSet="UTF-8" />
+        <Meta />
         <title>{title}</title>
         <Links />
       </head>
