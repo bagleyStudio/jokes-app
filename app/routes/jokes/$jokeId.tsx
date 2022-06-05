@@ -5,7 +5,13 @@ import type {
   MetaFunction,
 } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { Link, useLoaderData, useParams, useCatch } from "@remix-run/react";
+import {
+  Link,
+  useLoaderData,
+  useParams,
+  useCatch,
+  Form,
+} from "@remix-run/react";
 
 import { db } from "~/utils/db.server";
 import { getUserId, requireUserId } from "~/utils/session.server";
@@ -94,13 +100,13 @@ export default function Joke() {
       <Link to=".">{data.joke.name}</Link>
 
       {data.isOwner ? (
-        <form method="_method">
+        <Form>
           <input type="hidden" name="_method" value="delete" />
 
           <button type="submit" className="button">
             Delete
           </button>
-        </form>
+        </Form>
       ) : null}
     </>
   );
