@@ -1,14 +1,16 @@
+import type { joke } from "@prisma/client";
 import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Link, useLoaderData, useParams, useCatch } from "@remix-run/react";
-import type { joke } from "@prisma/client";
 
 import { db } from "~/utils/db.server";
-import { requireUserId } from "~/utils/session.server";
+import { getUserId, requireUserId } from "~/utils/session.server";
 
-type LoaderData = { joke: joke };
+type LoaderData = { joke: joke; isOwner: boolean };
 
-export const loader: LoaderFunction = async ({ params }) => {
+export const loader: LoaderFunction = async ({ request, params }) => {
+  const userId = await getUserId(request);
+
   const joke = await db.joke.findUnique({
     where: { id: params.jokeId },
   });
@@ -19,7 +21,7 @@ export const loader: LoaderFunction = async ({ params }) => {
     });
   }
 
-  const data: LoaderData = { joke };
+  const data: LoaderData = { joke, isOwner: userId === joke.jokesterId };
 
   return json(data);
 };
@@ -37,6 +39,7 @@ export const action: ActionFunction = async ({ request, params }) => {
   }
 
   const userId = await requireUserId(request);
+
   const joke = await db.joke.findUnique({
     where: { id: params.jokeId },
   });
@@ -63,16 +66,20 @@ export default function Joke() {
   return (
     <>
       <p>Here is your joke...</p>
+
       <p>{data.joke.content}</p>
+
       <Link to=".">{data.joke.name}</Link>
 
-      <form method="_method">
-        <input type="hidden" name="_method" value="delete" />
+      {data.isOwner ? (
+        <form method="_method">
+          <input type="hidden" name="_method" value="delete" />
 
-        <button type="submit" className="button">
-          Delete
-        </button>
-      </form>
+          <button type="submit" className="button">
+            Delete
+          </button>
+        </form>
+      ) : null}
     </>
   );
 }
